@@ -23,6 +23,18 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeMvvm: HomeViewModel
 
+    //otra variable para llamarla en la imagen 3
+    private lateinit var randomMeal: Meal
+
+    //hacemos companion objet de las zonas de cada descripcion de la tarea 1
+    companion object {
+        const val MEAL_ID = "com.example.noname.ListFragments.idMeal"
+        const val MEAL_NAME = "com.example.noname.ListFragments.NameMeal"
+        const val MEAL_THUMB = "com.example.noname.ListFragments.thumbMeal"
+
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeMvvm = ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -48,25 +60,28 @@ class HomeFragment : Fragment() {
 
 
     }
-
+//Añadimos cada campo del companion objet 4
     private fun onRandomMealClick() {
         binding.randomFood.setOnClickListener {
-            val intent = Intent (activity,Food_Activity::class.java )
+            val intent = Intent(activity, Food_Activity::class.java)
+            intent.putExtra(MEAL_ID,randomMeal.idMeal)
+            intent.putExtra(MEAL_NAME,randomMeal.strMeal)
+            intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
             startActivity(intent)
         }
     }
-
+//mejoramos el enlace 2
     private fun observerRandomFood() {
-        homeMvvm.observeRandomFoodLiveData().observe(viewLifecycleOwner, object : Observer<Meal> {
-            override fun onChanged(value: Meal) {
+        homeMvvm.observeRandomFoodLiveData().observe(viewLifecycleOwner,
+            { meal ->
                 Glide.with(this@HomeFragment)
-                    .load(value.strMealThumb)
+                    .load(meal!!.strMealThumb)
                     .into(binding.randomFood)
-            }
+
+                this.randomMeal = meal
 
 
-        })
+            })
     }
-
-
 }
+
