@@ -1,10 +1,11 @@
-package com.example.noname
+package com.example.noname.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.example.noname.R
 import com.example.noname.databinding.ActivitySecondBinding
 
 class SecondActivity : AppCompatActivity() {
