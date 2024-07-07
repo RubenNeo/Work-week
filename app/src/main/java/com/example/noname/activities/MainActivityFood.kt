@@ -22,7 +22,7 @@ class MainActivityFood : AppCompatActivity() {
         Handler().postDelayed({
             binding.loader.visibility = View.GONE
             binding.btnStart.visibility = View.VISIBLE
-        }, 2000)
+        }, 3000)
 
         binding.btnStart.setOnClickListener {
             // Aquí puedes iniciar la siguiente actividad o realizar otra acción

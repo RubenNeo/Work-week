@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-
 import com.example.noname.DataClasses.Meal
-
-
+import com.example.noname.ViewModel.FoodViewModel
 import com.example.noname.ViewModel.HomeViewModel
-import com.example.noname.activities.Food_Activity
+import com.example.noname.activities.FoodActivity
 import com.example.noname.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -61,16 +58,18 @@ class HomeFragment : Fragment() {
 
     }
 //Añadimos cada campo del companion objet 4
-    private fun onRandomMealClick() {
-        binding.randomFood.setOnClickListener {
-            val intent = Intent(activity, Food_Activity::class.java)
-            intent.putExtra(MEAL_ID,randomMeal.idMeal)
-            intent.putExtra(MEAL_NAME,randomMeal.strMeal)
-            intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
-            startActivity(intent)
-        }
+private fun onRandomMealClick() {
+    binding.randomFood.setOnClickListener {
+        val intent = Intent(requireContext(), FoodActivity::class.java)
+
+        intent.putExtra(MEAL_ID, randomMeal.idMeal)
+        intent.putExtra(MEAL_NAME, randomMeal.strMeal)
+        intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
+        startActivity(intent)
     }
-//mejoramos el enlace 2
+}
+
+    //mejoramos el enlace 2
     private fun observerRandomFood() {
         homeMvvm.observeRandomFoodLiveData().observe(viewLifecycleOwner,
             { meal ->
