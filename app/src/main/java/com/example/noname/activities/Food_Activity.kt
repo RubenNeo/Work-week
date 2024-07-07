@@ -1,6 +1,9 @@
 package com.example.noname.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +19,7 @@ class FoodActivity : AppCompatActivity() {
     private lateinit var mealId: String
     private lateinit var mealName: String
     private lateinit var mealThumb: String
+    private lateinit var youtubeLink : String
     private lateinit var mealMvvm: FoodViewModel//añadimos foodViewModel a este activity mediante una variable 13
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,30 +28,44 @@ class FoodActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Llamar a esta función antes de cualquier operación que dependa de las variables
+        mealMvvm = ViewModelProvider(this).get(FoodViewModel::class.java)
+
         getFoodInformationFromIntent()
 
-        mealMvvm = ViewModelProvider(this).get(FoodViewModel::class.java)
+        setInformationInViews()
+
+        loadingCase()
 
         mealMvvm.getFoodDetail(mealId)
         observerMealDetailsLiveData()
 
-        // En esta funcion usamos el Glide para esa imagen
-        setInformationInViews()
+       onYoutubeImageClick()
+
+    }
+//Añadimos el boton de Youtube
+    private fun onYoutubeImageClick() {
+       binding.imgYoutube.setOnClickListener {
+        val intent = Intent (Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+           startActivity(intent)
+       }
     }
 
     private fun observerMealDetailsLiveData() {
-        mealMvvm.observeFoodDetailLiveData().observe(this, object : Observer<Meal>{
+        mealMvvm.observeFoodDetailLiveData().observe(this, object : Observer<Meal> {
             override fun onChanged(t: Meal) {
+                onResponseCase()
                 val meal = t
 
-                binding.CategoryId.text = meal.strCategory
-                binding.AreaId.text = meal.idMeal
+                binding.CategoryId.text = "Category : ${meal.strCategory}"
+                binding.AreaId.text = "Area : ${meal.strArea}"
                 binding.InstruccionsId.text = meal.strInstructions
+
+                youtubeLink = meal.strYoutube
 
             }
 
         })
-            }
+    }
 
 
     //funcion de la imagen Glide
@@ -71,4 +89,27 @@ class FoodActivity : AppCompatActivity() {
         mealName = intent.getStringExtra(HomeFragment.MEAL_NAME)!!
         mealThumb = intent.getStringExtra(HomeFragment.MEAL_THUMB)!!
     }
+
+    private fun loadingCase() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.btnFavorite.visibility = View.INVISIBLE
+        binding.InstruccionsId.visibility = View.INVISIBLE
+        binding.CategoryId.visibility = View.INVISIBLE
+        binding.AreaId.visibility = View.INVISIBLE
+        binding.imgYoutube.visibility = View.INVISIBLE
+
+    }
+
+    private fun onResponseCase() {
+        binding.progressBar.visibility = View.INVISIBLE
+        binding.btnFavorite.visibility = View.VISIBLE
+        binding.InstruccionsId.visibility = View.VISIBLE
+        binding.CategoryId.visibility = View.VISIBLE
+        binding.AreaId.visibility = View.VISIBLE
+        binding.imgYoutube.visibility = View.VISIBLE
+
+
+    }
+
+
 }
